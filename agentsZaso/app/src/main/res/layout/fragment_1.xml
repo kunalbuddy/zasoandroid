@@ -1,15 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="400dp"
-    android:paddingTop="100dp"
-    android:layout_marginTop="100dp"
-    android:background="#ff6666">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:paddingTop="50dp"
+
+    android:orientation="vertical"
+    android:background="#f8f8f8">
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textViewId"
-        android:background="#fff"
-        android:text="fragment1"/>
+        android:text="@string/frag_lable"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:textSize="30sp"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/textViewId0"
+        android:layout_gravity="center"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+
+        android:layout_gravity="center"
+        android:id="@+id/textViewId00"
+        android:textSize="20sp"/>
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        android:layout_gravity="center"
+        android:hint="email"
+        android:id="@+id/textViewId1"
+
+        android:text=""/>
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="20sp"
+    android:textStyle="italic"
+    android:layout_gravity="center"
+    android:layout_marginTop="10dp"
+    android:id="@+id/textViewId2"
+
+    android:text=""/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+
+        android:id="@+id/textViewId3"
+        android:text=""/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        android:layout_marginTop="10dp"
+        android:id="@+id/textViewId4"
+
+        android:text=""/>
 </LinearLayout>
