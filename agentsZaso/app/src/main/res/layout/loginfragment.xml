@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="#ffff"
+    android:orientation="vertical"
+    android:id="@+id/loginFragmentId"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="100dp"
+        android:layout_height="250dp"
+        android:id="@+id/loginLinearId"
+        android:orientation="vertical">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/loginEditTextId"
+            android:paddingLeft="20dp"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:hint="Email"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:paddingLeft="20dp"
+            android:textSize="20sp"
+            android:id="@+id/loginEditTextId1"
+            android:password="true"
+            android:hint="Password"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textSize="22dp"
+            android:textStyle=""
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:text="@string/login_button"
+            android:id="@+id/loginButtonId"
+            android:background="#373f54f8" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="1dp"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+
+        android:id="@+id/linearLayoutSignUpId">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/loginTextViewId"
+        android:text="@string/signup_text"
+        android:textSize="18dp"
+        android:textStyle="normal"
+        android:paddingLeft="50dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up_button"
+        android:textSize="20sp"
+        android:paddingLeft="6dp"
+        android:id="@+id/signUpHereId"
+        android:textColor="#0066ff"/>
+    </LinearLayout>
+
+</LinearLayout>

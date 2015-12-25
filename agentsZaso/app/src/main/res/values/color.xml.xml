@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fc_background_light">#eeeeee</color>
+    <color name="fc_background_saved_card_visa">#242424</color>
+    <color name="primaryColor">#607D8B</color>
+    <color name="primaryColorsDark">#455A64</color>
+</resources>

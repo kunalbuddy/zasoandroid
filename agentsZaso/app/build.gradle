@@ -12,10 +12,19 @@ android {
         versionName "1.0"
         multiDexEnabled = true
     }
+    dexOptions {
+        javaMaxHeapSize "2g"
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    repositories {
+        jcenter()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
         }
     }
 
@@ -34,11 +43,17 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+   // compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.0'
     compile 'com.google.android.gms:play-services:7.8.0'
     compile 'com.fasterxml.jackson.core:jackson-core:2.6.3'
     compile 'com.android.support:multidex:1.0.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.okhttp:okhttp:2.1.0'
+    compile 'com.mobsandgeeks:android-saripaar:2.0.3'
+
+
+
 
 
     // compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'

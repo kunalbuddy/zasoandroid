@@ -1,17 +1,32 @@
 <resources>
     <string name="app_name">ParseGeo</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">Zaso</string>
     <string name="cancel">Cancel</string>
     <string name="menu">Sett</string>
     <string name="action_settings">Settings</string>
     <string name="myMapLocationDrawable">My Location</string>
     <string name="frag_lable">Agent Information</string>
+    <string name="login_button">LOGIN</string>
+    <string name="signup_text">NewUser?Regester</string>
+    <string name="sign_up_button">here</string>
+    <string name="fullName_text">Name</string>
+    <string name="emai_text">Email Id</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="password_text">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="sign_up">Sign Up</string>
     <string-array name="agents_array">
         <item>VISA</item>
         <item>Passport</item>
         <item>RTO</item>
         <item>Aadhar Card</item>
         <item>Pan Card</item>
+        <item>Rail Ticket</item>
+    </string-array>
+
+    <string-array name="dropdown">
+        <item>Favourite</item>
+        <item>Logout</item>
     </string-array>
 
 </resources>

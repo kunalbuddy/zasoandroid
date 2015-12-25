@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:background="#ffff"
+    android:weightSum="1"
+    >
+    <LinearLayout
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:id="@+id/linearLayoutSignUpId"
+        android:layout_weight="0.28">
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text=""
+        android:hint="@string/fullName_text"
+        android:id="@+id/editTextId1"
+        android:textSize="25sp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text=""
+        android:hint="@string/emai_text"
+        android:id="@+id/editTextId2"
+        android:layout_gravity="center_horizontal"
+        android:textSize="25sp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/mobile_number"
+        android:inputType="phone"
+        android:maxLength="10"
+        android:text=""
+        android:id="@+id/editTextId3"
+        android:layout_gravity="center_horizontal"
+        android:textSize="25sp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:password="true"
+        android:hint="@string/password_text"
+        android:id="@+id/editTextId4"
+        android:layout_gravity="center_horizontal"
+        android:textSize="25sp" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:password="true"
+            android:hint="@string/confirm_password"
+            android:id="@+id/editTextId5"
+            android:layout_gravity="center_horizontal"
+            android:textSize="25sp" />
+
+
+        <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up"
+            android:layout_marginTop="15dp"
+            android:textSize="22sp"
+        android:id="@+id/submitButtonId"
+        android:layout_gravity="center_horizontal"
+            android:background="#ba807c80" />
+    </LinearLayout>
+
+</LinearLayout>

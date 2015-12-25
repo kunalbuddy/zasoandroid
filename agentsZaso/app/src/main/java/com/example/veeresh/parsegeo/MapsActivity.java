@@ -1,21 +1,36 @@
+
 package com.example.veeresh.parsegeo;
+
 
 
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,6 +45,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,7 +54,13 @@ import java.util.List;
 
 import APIs.AgentPicEndPoint;
 import APIs.AllAgentEndPoint;
+import APIs.AllFavouriteEndPoint;
+import APIs.LogoutEndPoint;
+import APIs.RemoveFavEndPoint;
+import APIs.SaveUserFavouriteEndPoint;
+import AdapterCustom.ListViewAdapter;
 import Models.AllAgentModels;
+import Models.FavouriteModel;
 import Models.PositionModel;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -46,9 +68,13 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.JacksonConverter;
 
-public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarkerClickListener {
-    String API = "http://192.168.1.11:8081";
 
+public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener,ActionBar.OnNavigationListener {
+   public final static String API = "http://192.168.1.11:8081";
+    public final static String TAG_NAME ="map activity";
+
+    FavouriteFragement favouriteFragement;
+    private Toolbar toolbar;
     PositionModel loc=null;
     public double latitude;
     public double longitude;
@@ -59,13 +85,21 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
    ProgressDialog dialog;
     FragmentManager manager ;
     FragmentTransaction trans;
+    Context context=MapsActivity.this;
+    SharedPreferences sharedPreferences;
     private HashMap<Marker,AllAgentModels>  markerAgentMapping=new HashMap<>();
+    LoginFragment login=new LoginFragment();
+    private List<FavouriteModel> models=new ArrayList<FavouriteModel>();
 
 
     RestAdapter retrofit = new RestAdapter.Builder()
             .setEndpoint(API).setConverter(new JacksonConverter()).build();
     AgentPicEndPoint agentPicEndPoint=retrofit.create(AgentPicEndPoint.class);
     AllAgentEndPoint allAgentEndPoint=retrofit.create(AllAgentEndPoint.class);
+    RemoveFavEndPoint removeFavEndPoint=retrofit.create(RemoveFavEndPoint.class);
+    SaveUserFavouriteEndPoint userFavouriteEndPoint=retrofit.create(SaveUserFavouriteEndPoint.class);
+    AllFavouriteEndPoint allFavouriteEndPoint=retrofit.create(AllFavouriteEndPoint.class);
+    LogoutEndPoint logoutEndPoint=retrofit.create(LogoutEndPoint.class);
 
 
 
@@ -73,55 +107,179 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        setUpMapIfNeeded();
-        spinner = (Spinner) findViewById(R.id.spinner);
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.agents_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        mMap.setOnMarkerClickListener(MapsActivity.this);
-
-        /*spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            String name=parent.getItemAtPosition(position).toString();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });*/
+        sharedPreferences=getSharedPreferences("auth_tocken",0);
+        String strpref=sharedPreferences.getString("auth_tocken","");
 
 
 
+//
+//        toolbar=(Toolbar)findViewById(R.id.toolBar);
+//        setSupportActionBar(toolbar);b
+       // getSupportActionBar().show();
+
+
+
+            setUpMapIfNeeded();
+            spinner = (Spinner) findViewById(R.id.spinner);
+
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                    R.array.agents_array, android.R.layout.simple_spinner_item);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+            mMap.setOnMarkerClickListener(MapsActivity.this);
+
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String name = parent.getItemAtPosition(position).toString();
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+
+
+        final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+       // actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+/*
+      final String[] dropdownValues = getResources().getStringArray(R.array.dropdown);
+
+        ArrayAdapter<String> adapterBar = new ArrayAdapter<String>(actionBar.getThemedContext(),
+                android.R.layout.simple_spinner_item, android.R.id.text1,
+                dropdownValues);
+
+       adapterBar.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        actionBar.setListNavigationCallbacks(adapterBar, this);*/
     }
 
-  /*  public  void  getAllAgentInfo()
-    {
-        allAgentEndPoint.getAllAgent(new Callback<AllAgentEndPoint>() {
-            @Override
-            public void success(AllAgentEndPoint allAgentEndPoint, Response response) {
-            MapsActivity.this.allAgentEndPoint=allAgentEndPoint;
+
+    @Override
+    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+        return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_menu, menu);
+        return true;
+        /*return super.onCreateOptionsMenu(menu);*/
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId())
+        {
+            case R.id.favoriteId:
+            {
+             favouriteAll();
+                return true;
             }
-
-            @Override
-            public void failure(RetrofitError error) {
-
+            case R.id.logoutId:
+            {
+               logoutZaso();
+                return true;
             }
-        });
+            default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
 
-    }*/
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     protected void onResume()
     {
         super.onResume();
         setUpMapIfNeeded();
+        sharedPreferences=getSharedPreferences("auth_tocken",0);
+        String strpref=sharedPreferences.getString("auth_tocken","");
+        if(strpref.equals("")) {
+
+            loginPage(login);
+        }
     }
 
+    public void favouriteAll()
+    {
+       /* allFavouriteEndPoint.getAllFav(new Callback<List<FavouriteModel>>() {
+            @Override
+            public void success(List<FavouriteModel> favouriteModels, Response response) {
+
+                models=favouriteModels;
+                listView.setAdapter(new ListViewAdapter(context,models));
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });*/
+        favouriteFragement=new FavouriteFragement();
+        manager=getSupportFragmentManager();
+        trans=manager.beginTransaction();
+        trans.add(R.id.main_container,favouriteFragement);
+        trans.addToBackStack(TAG_NAME);
+        trans.commit();
+
+    }
+
+    public void logoutZaso()
+    {
+        sharedPreferences=getSharedPreferences("auth_tocken",0);
+        String accessToken=sharedPreferences.getString("auth_tocken","");
+
+
+        logoutEndPoint.logoutUser(accessToken, new Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+
+                SharedPreferences.Editor editor=sharedPreferences.edit();
+                editor.clear();
+                editor.commit();
+                String token=sharedPreferences.getString("auth_tocken","");
+                if(token.equals("")) {
+
+                    loginPage(login);
+                }
+
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                System.out.println(error.toString());
+
+            }
+        });
+    }
+
+
+
+
+    public void loginPage(LoginFragment login)
+    {
+        manager = getSupportFragmentManager();
+        trans = manager.beginTransaction();
+        trans.add(R.id.main_container, login);
+        trans.addToBackStack(TAG_NAME);
+        trans.commit();
+    }
 
     public void setUserLocation(Location location)
     {
@@ -150,24 +308,30 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
     @Override
     protected void onPause() {
         super.onPause();
-        dialog.dismiss();
+        if(dialog!=null) {
+            dialog.dismiss();
+        }
     }
 
     private void setUpMap() {
-        /*ParseGeoPoint userLocation = new ParseGeoPoint();
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Agents");
-        query.whereNear("location", userLocation);
-        query.setLimit(10);*/
-        mMap.setMyLocationEnabled(true);
 
-        dialog = new ProgressDialog(MapsActivity.this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setMessage("Loading. Please wait...");
-        dialog.setIndeterminate(true);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
+//ParseGeoPoint userLocation = new ParseGeoPoint();
+//        ParseQuery<ParseObject> query = ParseQuery.getQuery("Agents");
+//        query.whereNear("location", userLocation);
+//        query.setLimit(10);
+
+        mMap.setMyLocationEnabled(true);
+        if(!sharedPreferences.getString("auth_tocken","").equals("")) {
+
+            dialog = new ProgressDialog(MapsActivity.this);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialog.setMessage("Loading. Please wait...");
+            dialog.setIndeterminate(true);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        }
 
 
         allAgentEndPoint.getAllAgent(new Callback<List<AllAgentModels>>() {
@@ -208,11 +372,13 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                                     LatLng agentLocation = new LatLng(loc.getLat(), loc.getLon());
 
 
-                                    myMarker = mMap.addMarker(new MarkerOptions()
+                                        myMarker = mMap.addMarker(new MarkerOptions()
+//                                            title(agentDetails.getSpeciality(speciality) + " ")
 
-                                    /*.title(agentDetails.getSpeciality(speciality) + " ")*/
-                           /* .title(agentDetails.getSpeciality()) */
-                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_agent_map))
+
+/* .title(agentDetails.getSpeciality()) */
+
+                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_agent_map))
                                             .position(agentLocation));
 
                                     markerAgentMapping.put(myMarker, agentDetails);
@@ -228,7 +394,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {List<AllAgentModels> clubbedSpecAgents = clubAgentsSpeciality(agentModelsList);
-                        // List<Al
+
 
                     }
                 });
@@ -261,8 +427,12 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
                     myMarker = mMap.addMarker(new MarkerOptions()
 
-                                    /*.title(agentDetails.getSpeciality(speciality) + " ")*/
-                           /* .title(agentDetails.getSpeciality()) */
+
+/*.title(agentDetails.getSpeciality(speciality) + " ")*//*
+
+                           */
+/* .title(agentDetails.getSpeciality()) */
+
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_agent_map))
                             .position(agentLocation));
 
@@ -386,13 +556,5 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         return false;
     }
 
-
-
-
-
-
-
-
-
-
 }
+
